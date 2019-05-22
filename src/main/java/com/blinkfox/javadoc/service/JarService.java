@@ -45,8 +45,8 @@ public class JarService {
         // 循环遍历下载各个 Maven 仓库的 javadoc jar 包，直到下载到为止.
         for (String repo : mvnRepos) {
             String url = jarInfo.joinJavadocDownloadUrl(repo);
-            File jarFile = new File(FileUtils.getTempDirectoryPath() + File.separator + jarInfo.getJavadocJarName());
-            log.info("生成的 javadoc 文件路径为: {}", jarFile);
+             File jarFile = new File(FileUtils.getTempDirectoryPath() + File.separator + jarInfo.getJavadocJarName());
+            log.info("\n--- 需要下载的url地址为:{}\n--- 生成的 javadoc 文件路径为: {}", url, jarFile);
 
             // 下载 javadoc.jar 文件，并写入到文件中.
             try {
