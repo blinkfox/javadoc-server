@@ -1,1 +1,23 @@
+spring:
+  application:
+    name: javadoc-server
 
+# 服务端口，将默认为1010.
+server:
+  port: 1010
+
+# 日志相关的简单配置.
+logging:
+  file: logs/javadoc-server.log
+  level:
+    root: info
+    org:
+      apache: warn
+      springframework: warn
+
+# 本系统服务相关的配置项.
+system:
+  mvnRepos:
+    - https://repo1.maven.org/maven2
+    - http://repo.spring.io/libs-milestone
+    - http://jcenter.bintray.com
