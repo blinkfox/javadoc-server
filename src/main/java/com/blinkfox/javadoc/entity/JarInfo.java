@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.File;
+
 /**
  * 封装的 jar 包信息实体类.
  *
@@ -30,6 +32,11 @@ public class JarInfo {
      * jar 包的版本.
      */
     private String version;
+
+    /**
+     * 存到本地的 javadoc 文件.
+     */
+    private File jarFile;
 
     /**
      * 核心构造方法.

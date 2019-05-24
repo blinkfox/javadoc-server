@@ -42,6 +42,7 @@ public class JarService {
             throw new RunException("没有配置可以下载 jar 的 Maven 仓库地址！");
         }
 
+        long start = System.currentTimeMillis();
         // 循环遍历下载各个 Maven 仓库的 javadoc jar 包，直到下载到为止.
         for (String repo : mvnRepos) {
             String url = jarInfo.joinJavadocDownloadUrl(repo);
@@ -62,9 +63,21 @@ public class JarService {
             // 如果 javadoc.jar 文件已经存在，就跳出循环.
             if (jarFile.exists()) {
                 log.info("该文件已经存在，将跳出循环，不再下载 jar 包了.");
+                jarInfo.setJarFile(jarFile);
+                log.info("下载 jar 包完成，耗时: {} ms.", System.currentTimeMillis() - start);
                 break;
             }
         }
+        log.info("执行完毕!");
+    }
+
+    /**
+     * 解压缩 jar 文件.
+     *
+     * @param jarInfo jar信息
+     */
+    public void decompressJar(JarInfo jarInfo) {
+        
     }
 
 }
