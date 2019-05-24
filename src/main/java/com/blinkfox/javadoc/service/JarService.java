@@ -5,7 +5,13 @@ import com.blinkfox.javadoc.entity.JarInfo;
 import com.blinkfox.javadoc.exception.RunException;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
@@ -76,8 +82,27 @@ public class JarService {
      *
      * @param jarInfo jar信息
      */
-    public void decompressJar(JarInfo jarInfo) {
-        
+    public void decompressJar(JarInfo jarInfo) throws IOException {
+        String destDir = "";
+        JarFile jar = new JarFile(jarInfo.getJarFile());
+        Enumeration enumEntries = jar.entries();
+        while (enumEntries.hasMoreElements()) {
+            JarEntry file = (java.util.jar.JarEntry) enumEntries.nextElement();
+            java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
+            if (file.isDirectory()) {
+                f.mkdir();
+                continue;
+            }
+
+            InputStream is = jar.getInputStream(file);
+            java.io.FileOutputStream fos = new FileOutputStream(f);
+            while (is.available() > 0) {
+                fos.write(is.read());
+            }
+            fos.close();
+            is.close();
+        }
+        jar.close();
     }
 
 }
