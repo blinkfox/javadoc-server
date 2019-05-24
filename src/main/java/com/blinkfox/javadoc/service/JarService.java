@@ -65,7 +65,9 @@ public class JarService {
 
             // 下载 javadoc.jar 文件，并写入到文件中.
             try {
+                log.info("开始尝试从 {} 仓库下载 jar 包...", repo);
                 byte[] jarBytes = new RestTemplate().getForObject(url, byte[].class);
+                log.info("从 {} 仓库下载 jar 包完毕，下载耗时: {} ms.", repo, System.currentTimeMillis() - start);
                 if (jarBytes == null) {
                     throw new RunException("下载 Maven 仓库中的 jar 包失败.");
                 }
