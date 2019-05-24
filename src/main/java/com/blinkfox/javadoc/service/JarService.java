@@ -37,7 +37,7 @@ public class JarService {
             throw new RunException("未下载到对应的 jar 包!");
         }
 
-        this.decompressJar("/Users/blinkfox/Downloads/test", jarFileOptional.get());
+        this.decompressJar("/Users/blinkfox/Downloads/test/jarfiles", jarFileOptional.get());
     }
 
     /**
@@ -59,7 +59,8 @@ public class JarService {
         // 循环遍历下载各个 Maven 仓库的 javadoc jar 包，直到下载到为止.
         for (String repo : mvnRepos) {
             String url = jarInfo.joinJavadocDownloadUrl(repo);
-            File jarFile = new File(FileUtils.getTempDirectoryPath() + File.separator + jarInfo.getJavadocJarName());
+//            File jarFile = new File(FileUtils.getTempDirectoryPath() + File.separator + jarInfo.getJavadocJarName());
+            File jarFile = new File("/Users/blinkfox/Downloads/test" + File.separator + jarInfo.getJavadocJarName());
             log.info("\n--- 需要下载的url地址为:{}\n--- 生成的 javadoc 文件路径为: {}", url, jarFile);
 
             // 下载 javadoc.jar 文件，并写入到文件中.
@@ -71,6 +72,7 @@ public class JarService {
                 FileUtils.writeByteArrayToFile(jarFile, jarBytes);
             } catch (Exception e) {
                 log.error("下载 {} 仓库中的 jar 包出错, 下载的 url 为: {}.", repo, url, e);
+                continue;
             }
 
             // 如果 javadoc.jar 文件已经存在，就跳出循环.
@@ -102,6 +104,7 @@ public class JarService {
 
                 FileUtils.copyInputStreamToFile(jar.getInputStream(jarEntry), file);
             }
+            log.info("解压缩 jar 文件完成，压缩后的文件夾路径为: {}", destDir);
         } catch (Exception e) {
             log.error("解压缩 jar 文件出错！", e);
             throw new RunException("解压缩 jar 文件出错!", e);

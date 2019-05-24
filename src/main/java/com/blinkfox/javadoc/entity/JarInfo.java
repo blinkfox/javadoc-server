@@ -34,11 +34,6 @@ public class JarInfo {
     private String version;
 
     /**
-     * 存到本地的 javadoc 文件.
-     */
-    private File jarFile;
-
-    /**
      * 核心构造方法.
      *
      * @param groupId groupId

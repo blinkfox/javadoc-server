@@ -39,7 +39,7 @@ public class IndexController {
      */
     @GetMapping("/download")
     public ResponseEntity<String> download() {
-        jarService.download(new JarInfo("com.blinkfox", "jpack-maven-plugin", "1.2.0"));
+        jarService.downloadAndDecompressJar(new JarInfo("com.blinkfox", "jpack-maven-plugin", "1.2.0"));
         return ResponseEntity.ok("下载 jar 文件成功.");
     }
 
