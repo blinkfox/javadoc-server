@@ -22,7 +22,7 @@ system:
     endpoint: http://127.0.0.1:9000
     accessKey: minio
     secretKey: 12345678
-    alias: javadoc-minio
+    alias: javadoc
     bucket: docs
   mvnRepos:
     - https://repo1.maven.org/maven2

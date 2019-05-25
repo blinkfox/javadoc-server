@@ -69,8 +69,9 @@ public class MinioClientService {
         // 在操作系统中设置 MinIO 的环境变量.
         this.setMcEnvPath();
 
-        // 给 MinIO 添加别名.
+        // 给 MinIO 添加别名和初始化创建桶.
         this.checkAndAddHostConfig();
+        this.checkAndInitBucket();
     }
 
     /**
@@ -118,12 +119,7 @@ public class MinioClientService {
         }
 
         // 将 configs 的 json数据做一定的处理，然后解析出来.
-        configs = configs.replace("}", "},");
-        configs = "[" + configs.substring(0, configs.length() - 1) + "]";
-        JSONArray jsonArray = JSON.parseArray(configs);
-        if (jsonArray == null) {
-            throw new RunException("解析获取到的 MinIO 的别名配置出错！");
-        }
+        JSONArray jsonArray = this.handleJsons2JsonArray(configs);
 
         // 遍历判断该 alias 及对应的 endpoint 是否存在
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -139,8 +135,7 @@ public class MinioClientService {
         log.info("正在创建别名【{}】和Endpoint【{}】的 host 配置...", alias, endpoint);
         String result = CmdKit.exec(StringKit.format("{} config host --json add {} {} {} {}",
                 this.mcPath, alias, endpoint, systemConfig.getAccessKey(), systemConfig.getSecretKey()));
-        JSONObject jsonObject = JSON.parseObject(result);
-        if (Const.SUCCESS.equalsIgnoreCase((String) jsonObject.get("status"))) {
+        if (this.isMcSuccess(result)) {
             log.info("创建 MinIO 的别名配置成功，alias为:【{}】, host为:【{}】.", alias, endpoint);
         } else {
             log.error("创建 MinIO 的别名配置失败，alias为:【{}】, host为:【{}】.", alias, endpoint);
@@ -148,10 +143,56 @@ public class MinioClientService {
     }
 
     /**
+     * 将多个平行的 json 字符串处理成 JSONArray.
+     *
+     * @param jsons 多个平行的 json 字符串
+     * @return JSONArray
+     */
+    private JSONArray handleJsons2JsonArray(String jsons) {
+        jsons = jsons.replace("}", "},");
+        jsons = "[" + jsons.substring(0, jsons.length() - 1) + "]";
+        JSONArray jsonArray = JSON.parseArray(jsons);
+        if (jsonArray == null) {
+            throw new RunException("解析获取到的 MinIO 的别名配置出错！");
+        }
+        return jsonArray;
+    }
+
+    /**
      * 检查或者初始化 MinIO 中 bucket，如果桶不存在就新建一个.
      */
     private void checkAndInitBucket() {
-        // 待完善.
+        String alias = systemConfig.getAlias();
+        String bucket = systemConfig.getBucket();
+
+        // 列出该仓库下所有的桶，判断是否存在该桶，不存在就创建一个.
+        JSONArray jsonArray = this.handleJsons2JsonArray(
+                CmdKit.exec(StringKit.format("{} ls --json {}", this.mcPath, alias)));
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            if ((bucket + "/").equals(jsonObject.get("key"))) {
+                log.info("该别名【{}】下的桶【{}】已经存在了，将不再创建新的桶.", alias, bucket);
+                return;
+            }
+        }
+
+        // 不存在此桶就创建新的桶.
+        String cmd = StringKit.format("{} mb --json {}/{}", this.mcPath, alias, bucket);
+        if (this.isMcSuccess(CmdKit.exec(cmd))) {
+            log.info("创建别名【{}】下的桶【{}】成功.", alias, bucket);
+        } else {
+            log.error("创建别名【{}】下的桶【{}】失败!", alias, bucket);
+        }
+    }
+
+    /**
+     * 根据操作的 json 字符串结果，判断此操作是否成功.
+     *
+     * @param json json字符串
+     * @return 布尔值
+     */
+    private boolean isMcSuccess(String json) {
+        return Const.SUCCESS.equalsIgnoreCase((String) JSON.parseObject(json).get("status"));
     }
 
     /**

@@ -46,7 +46,7 @@ public class SystemConfig {
     /**
      * MinIO 的别名.
      */
-    @Value("${system.minio.alias:javadoc-minio}")
+    @Value("${system.minio.alias:javadoc}")
     private String alias;
 
     /**
