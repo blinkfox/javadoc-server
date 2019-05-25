@@ -7,7 +7,6 @@ import com.blinkfox.javadoc.kits.StringKit;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -17,7 +16,6 @@ import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,14 +38,41 @@ public class JarService {
     private static final String JAVA_ARCHIVE = "application/java-archive";
 
     @Resource
+    private MinioClientService minioClientService;
+
+    @Resource
     private SystemConfig systemConfig;
 
+    /**
+     * 下载 jar 包并解压缩 jar 包上传资源到 MinIO.
+     *
+     * @param jarInfo jar 包的信息
+     */
     public void downloadAndDecompressJar(JarInfo jarInfo) {
         if (jarInfo == null || jarInfo.valid()) {
             throw new RunException("需要下载的 jar 包相关信息不全！");
         }
 
-        this.decompressJar("/Users/blinkfox/Downloads/test/jarfiles", this.download(jarInfo));
+        // 下载 jar 包.
+        this.download(jarInfo);
+
+        // 生成 javadoc 的路径，如：/Users/blinkfox/.javadoc-server/{uuid}/com/blinkfox/zealot/1.3.1/zealot-1.3.1-javadoc
+        String tempDir = minioClientService.getServerHomeFile() + File.separator + StringKit.getUuid();
+        String assetsDir = tempDir + File.separator + jarInfo.getJavadocSlashPath();
+        try {
+            FileUtils.forceMkdir(new File(assetsDir));
+        } catch (IOException e) {
+            throw new RunException(StringKit.format("创建临时存放 javadoc 资源的目录失败，目录为:【{}】.", assetsDir), e);
+        }
+
+        // 解压 javadoc.jar 的文件资源到资源目录中
+        // 资源目录结构如：/Users/blinkfox/.javadoc-server/{uuid}/com/blinkfox/zealot/1.3.1/zealot-1.3.1-javadoc
+        this.decompressJar(assetsDir, jarInfo);
+
+        // 递归上传（如：`/Users/blinkfox/.javadoc-server/{uuid}/com`）目录下的所有资源到 MinIO 中.
+        minioClientService.uploadJardocFiles(tempDir + File.separator + jarInfo.getGroupIdFirstSplitName());
+
+        this.clean(tempDir);
     }
 
     /**
@@ -55,7 +80,7 @@ public class JarService {
      *
      * @param jarInfo jar 包的信息
      */
-    public File download(JarInfo jarInfo) {
+    private void download(JarInfo jarInfo) {
         List<String> mvnRepos = systemConfig.getMvnRepos();
         if (CollectionUtils.isEmpty(mvnRepos)) {
             throw new RunException("没有配置可以下载 jar 的 Maven 仓库地址！");
@@ -66,8 +91,7 @@ public class JarService {
         for (int i = 0, len = mvnRepos.size(); i < len; i++) {
             String repo = mvnRepos.get(i);
             String url = jarInfo.joinJavadocDownloadUrl(repo);
-//            File jarFile = new File(FileUtils.getTempDirectoryPath() + File.separator + jarInfo.getJavadocJarName());
-            File jarFile = new File("/Users/blinkfox/Downloads/test" + File.separator + jarInfo.getJavadocJarName());
+            File jarFile = new File(FileUtils.getTempDirectoryPath() + File.separator + jarInfo.getJavadocJarName());
 
             try {
                 log.info("第【{}】次开始从【{}】仓库链接中下载 jar 包...", i + 1, url);
@@ -78,7 +102,8 @@ public class JarService {
                     FileUtils.writeByteArrayToFile(jarFile, response.getBody());
                     if (jarFile.exists()) {
                         log.info("从 {} 仓库下载 jar 包到服务器完毕，下载总耗时: {} ms.", repo, System.currentTimeMillis() - start);
-                        return jarFile;
+                        jarInfo.setJarFile(jarFile);
+                        return;
                     }
                 }
             } catch (Exception e) {
@@ -107,10 +132,10 @@ public class JarService {
      * 解压缩 jar 文件.
      *
      * @param destDir 解压的目标目录
-     * @param jarFile jar文件
+     * @param jarInfo jar 包信息
      */
-    private void decompressJar(String destDir, File jarFile) {
-        try (JarFile jar = new JarFile(jarFile)) {
+    private void decompressJar(String destDir, JarInfo jarInfo) {
+        try (JarFile jar = new JarFile(jarInfo.getJarFile())) {
             Enumeration enumEntries = jar.entries();
             while (enumEntries.hasMoreElements()) {
                 JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
@@ -130,20 +155,12 @@ public class JarService {
     }
 
     /**
-     * 上传解压后的 jar 文件到 MinIO 中.
+     * 清除相关的临时资源.
      *
-     * @param dir 解压后的 jar 文件目录
+     * @param tempDir 该 jar 包的临时目录
      */
-    private static void uploadJarFiles(String dir) throws IOException {
-        // String cmd = "mc cp --recursive /Users/blinkfox/Downloads/test/jarfiles my/test";
-        String cmd = "mc -v";
-        Process p = new ProcessBuilder(cmd).start();
-        String result = IOUtils.toString(p.getInputStream(), StandardCharsets.UTF_8);
-        log.info("命令行执行结果: {}", result);
-    }
-
-    public static void main(String[] args) throws IOException {
-        uploadJarFiles("");
+    private void clean(String tempDir) {
+        FileUtils.deleteQuietly(new File(tempDir));
     }
 
 }

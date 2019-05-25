@@ -17,6 +17,13 @@ logging:
 
 # 本系统服务相关的配置项.
 system:
+  # MinIO 的别名和用来存 javadoc 的桶.
+  minio:
+    endpoint: http://127.0.0.1:9000
+    accessKey: minio
+    secretKey: 12345678
+    alias: javadoc-minio
+    bucket: docs
   mvnRepos:
     - https://repo1.maven.org/maven2
     - http://repo.spring.io/libs-milestone
