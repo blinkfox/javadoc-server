@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,16 +55,18 @@ public class JarService {
      *
      * @param jarInfo jar 包的信息
      */
+    @Cacheable(cacheNames = "javadoc", key = "#jarInfo.toString()")
     public String getOrGenerateJavadocUrl(JarInfo jarInfo) {
         if (jarInfo == null || jarInfo.valid()) {
             throw new RunException("需要下载的 jar 包相关信息不全！");
         }
 
+        // 查询该 jar 包是否有上传记录，如果有的话，就直接返回地址.
         Record record = recordRepository.queryByJarInfo(jarInfo.getGroupId(),
                 jarInfo.getArtifactId(), jarInfo.getVersion());
         if (record != null) {
             log.info("该 jar 信息已经上传过了，将直接返回 MinIO 地址.");
-            return this.getJavadocMinioUrl(jarInfo);
+            return record.getUrl();
         }
 
         // 下载 jar 包.
@@ -86,9 +89,9 @@ public class JarService {
         minioClientService.uploadJardocFiles(tempDir + File.separator + jarInfo.getGroupIdFirstSplitName());
 
         // 保存记录信息，并清除相关的数据，然后返回 MinIO 中 javadoc 资源的地址即可.
-        this.saveRecord(jarInfo);
+        Record savedRecord = this.saveRecord(jarInfo);
         this.clean(tempDir);
-        return this.getJavadocMinioUrl(jarInfo);
+        return savedRecord.getUrl();
     }
 
     /**
@@ -183,14 +186,18 @@ public class JarService {
      * 根据 jar 包信息保存相关的上传记录到数据库中.
      *
      * @param jarInfo jar 包信息
+     * @return 保存的 record 对象
      */
-    private void saveRecord(JarInfo jarInfo) {
-        recordRepository.save(new Record()
+    private Record saveRecord(JarInfo jarInfo) {
+        Record record = new Record()
                 .setId(StringKit.getUuid())
                 .setGroupId(jarInfo.getGroupId())
                 .setArtifactId(jarInfo.getArtifactId())
                 .setVersion(jarInfo.getVersion())
-                .setUptime(new Date()));
+                .setUrl(this.getJavadocMinioUrl(jarInfo))
+                .setUptime(new Date());
+        recordRepository.save(record);
+        return record;
     }
 
     /**

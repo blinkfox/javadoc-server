@@ -111,4 +111,15 @@ public class JarInfo {
                 this.artifactId, this.version, this.artifactId, this.version);
     }
 
+    /**
+     * 重写的 toString 方法.
+     * <p>结果如: `com.blinkfox/zealot/1.3.1`</p>
+     *
+     * @return 字符串值
+     */
+    @Override
+    public String toString() {
+        return StringUtils.join(groupId, "/", artifactId, "/", version);
+    }
+
 }

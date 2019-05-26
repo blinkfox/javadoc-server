@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/doc")
+@RequestMapping("/docs")
 @Api(tags = "获取 Javadoc 的接口")
 public class JavadocController {
 

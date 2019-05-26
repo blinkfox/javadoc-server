@@ -49,6 +49,12 @@ public class Record {
     private String version;
 
     /**
+     * 该 javadoc 资源在 MinIO 中的 URL 地址.
+     */
+    @Column(name = "c_url")
+    private String url;
+
+    /**
      * jar 上传更新的时间.
      */
     @Column(name = "dt_uptime")

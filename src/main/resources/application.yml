@@ -9,6 +9,12 @@ spring:
     password: 123456
     driver-class-name: org.postgresql.Driver
     platform: postgres
+  # 使用高性能的 caffeine 做缓存.
+  cache:
+    type: caffeine
+    cache-names: javadoc
+    caffeine:
+      spec: maximumSize=2000,expireAfterAccess=600s
   jpa:
     show-sql: true
     hibernate:
