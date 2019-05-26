@@ -54,7 +54,7 @@ public class JarService {
      *
      * @param jarInfo jar 包的信息
      */
-    public String downloadAndDecompressJar(JarInfo jarInfo) {
+    public String getOrGenerateJavadocUrl(JarInfo jarInfo) {
         if (jarInfo == null || jarInfo.valid()) {
             throw new RunException("需要下载的 jar 包相关信息不全！");
         }
