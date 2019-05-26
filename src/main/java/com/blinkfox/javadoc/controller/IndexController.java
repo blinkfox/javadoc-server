@@ -5,6 +5,8 @@ import com.blinkfox.javadoc.service.JarService;
 
 import javax.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author blinkfox on 2019-05-22.
  */
+@Slf4j
 @RestController
 @RequestMapping
 public class IndexController {
@@ -39,7 +42,8 @@ public class IndexController {
      */
     @GetMapping("/download")
     public ResponseEntity<String> download() {
-        jarService.downloadAndDecompressJar(new JarInfo("com.blinkfox", "jpack-maven-plugin", "1.2.0"));
+        String url = jarService.downloadAndDecompressJar(new JarInfo("com.blinkfox", "jpack-maven-plugin", "1.2.0"));
+        log.info("生成的url: {}.", url);
         return ResponseEntity.ok("下载 jar 文件成功.");
     }
 

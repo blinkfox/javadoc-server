@@ -4,9 +4,12 @@ import com.blinkfox.javadoc.config.SystemConfig;
 import com.blinkfox.javadoc.entity.JarInfo;
 import com.blinkfox.javadoc.exception.RunException;
 import com.blinkfox.javadoc.kits.StringKit;
+import com.blinkfox.javadoc.pojo.Record;
+import com.blinkfox.javadoc.repository.RecordRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -43,14 +46,24 @@ public class JarService {
     @Resource
     private SystemConfig systemConfig;
 
+    @Resource
+    private RecordRepository recordRepository;
+
     /**
      * 下载 jar 包并解压缩 jar 包上传资源到 MinIO.
      *
      * @param jarInfo jar 包的信息
      */
-    public void downloadAndDecompressJar(JarInfo jarInfo) {
+    public String downloadAndDecompressJar(JarInfo jarInfo) {
         if (jarInfo == null || jarInfo.valid()) {
             throw new RunException("需要下载的 jar 包相关信息不全！");
+        }
+
+        Record record = recordRepository.queryByJarInfo(jarInfo.getGroupId(),
+                jarInfo.getArtifactId(), jarInfo.getVersion());
+        if (record != null) {
+            log.info("该 jar 信息已经上传过了，将直接返回 MinIO 地址.");
+            return this.getJavadocMinioUrl(jarInfo);
         }
 
         // 下载 jar 包.
@@ -72,7 +85,10 @@ public class JarService {
         // 递归上传（如：`/Users/blinkfox/.javadoc-server/{uuid}/com`）目录下的所有资源到 MinIO 中.
         minioClientService.uploadJardocFiles(tempDir + File.separator + jarInfo.getGroupIdFirstSplitName());
 
+        // 保存记录信息，并清除相关的数据，然后返回 MinIO 中 javadoc 资源的地址即可.
+        this.saveRecord(jarInfo);
         this.clean(tempDir);
+        return this.getJavadocMinioUrl(jarInfo);
     }
 
     /**
@@ -161,6 +177,31 @@ public class JarService {
      */
     private void clean(String tempDir) {
         FileUtils.deleteQuietly(new File(tempDir));
+    }
+
+    /**
+     * 根据 jar 包信息保存相关的上传记录到数据库中.
+     *
+     * @param jarInfo jar 包信息
+     */
+    private void saveRecord(JarInfo jarInfo) {
+        recordRepository.save(new Record()
+                .setId(StringKit.getUuid())
+                .setGroupId(jarInfo.getGroupId())
+                .setArtifactId(jarInfo.getArtifactId())
+                .setVersion(jarInfo.getVersion())
+                .setUptime(new Date()));
+    }
+
+    /**
+     * 获取 MinIO 中 javadoc 可访问的 url 地址.
+     *
+     * @param jarInfo jar 包信息
+     * @return url地址
+     */
+    private String getJavadocMinioUrl(JarInfo jarInfo) {
+        return StringKit.format("{}/{}/{}/index.html", systemConfig.getEndpoint(), systemConfig.getBucket(),
+                jarInfo.getJavadocSlashPath());
     }
 
 }
