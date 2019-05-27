@@ -31,11 +31,11 @@
                 ${artifactId} <i class="caret"></i>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="/doc/com.blinkfox/adept">adept</a></li>
-                <li><a href="/doc/com.blinkfox/jpack-maven-plugin">jpack-maven-plugin</a></li>
-                <li><a href="/doc/com.blinkfox/mini-table">mini-table</a></li>
-                <li><a href="/doc/com.blinkfox/zealot">zealot</a></li>
-                <li><a href="/doc/com.blinkfox/zealot-spring-boot-starter">zealot-spring-boot-starter</a></li>
+                <#if artifactIds??>
+                <#list artifactIds as afId>
+                <li><a href="/docs/${groupId}/${afId}">${afId}</a></li>
+                </#list>
+                </#if>
             </ul>
         </li>
         <li class="dropdown">
@@ -43,12 +43,19 @@
                 ${version} <i class="caret"></i>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="/doc/com.blinkfox/adept/1.0.0">1.0.0</a></li>
+                <#if versions??>
+                <#list versions as v>
+                <li><a href="/docs/${groupId}/${artifactId}/${v}">${v}</a></li>
+                </#list>
+                </#if>
             </ul>
         </li>
     </ol>
     <div id="doc-container">
-        <iframe id="doc-iframe" src="http://127.0.0.1:9000/docs/com/blinkfox/zealot/1.3.1/index.html"></iframe>
+        <div id="info-tip" class="alert alert-info hide" role="alert"></div>
+        <div id="warn-tip" class="alert alert-warning hide" role="alert"></div>
+        <div id="error-tip" class="alert alert-danger hide" role="alert"></div>
+        <iframe id="doc-iframe" class="hide" src=""></iframe>
     </div>
 </div>
 
@@ -58,26 +65,45 @@
     var groupId = '${groupId}';
     var artifactId = '${artifactId}';
     var version = '${version}';
+    var flag = true;
+
+    /**
+     * 校验参数信息.
+     */
+    var validParams = function () {
+        if (!version) {
+            $('#error-tip').text('请填写该 jar 对应版本 version 的值!').removeClass('hide');
+            return false;
+        }
+
+        $('#info-tip').text('正在加载 Javadoc 资源.').removeClass('hide');
+        return true;
+    };
 
     /**
      * 获取 javadoc 的 url.
      */
     var getJavadocUrl = function() {
+        if (!validParams()) {
+            return;
+        }
+
         $.ajax({
             url: '/javadoc/' + groupId + '/' + artifactId + '/' + version,
             success: function(result) {
-                console.log('执行成功 success.');
-                var docFrame = '<iframe id="doc-iframe" src="' + result + '"></iframe>';
-                console.log(docFrame);
-                $('#doc-container').append(docFrame);
+                $('#info-tip').text('').addClass('hide');
+                $('#warn-tip').text('').addClass('hide');
+                $('#error-tip').text('').addClass('hide');
+                $('#doc-iframe').attr('src', result).removeClass('hide');
             },
             error: function() {
-                alert('执行失败!');
+                $('#info-tip').text('').addClass('hide');
+                $('#error-tip').text('加载 Javadoc 资源失败，请检查 jar 参数信息是否正确！').removeClass('hide');
             }
         });
     };
 
-    //getJavadocUrl();
+    getJavadocUrl();
 </script>
 </body>
 </html>

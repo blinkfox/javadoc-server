@@ -16,4 +16,9 @@ public final class Const {
      */
     public static final String SUCCESS = "success";
 
+    /**
+     * 分页条数.
+     */
+    public static final int PAGE_SIZE = 20;
+
 }
