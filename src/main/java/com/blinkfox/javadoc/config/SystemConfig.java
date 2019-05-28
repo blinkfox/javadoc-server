@@ -21,6 +21,12 @@ import org.springframework.stereotype.Component;
 public class SystemConfig {
 
     /**
+     * 本服务的基础 URL 地址.
+     */
+    @Value("${system.baseUrl}")
+    private String baseUrl;
+
+    /**
      * 配置的可用的 Maven 仓库.
      */
     private List<String> mvnRepos;

@@ -3,17 +3,9 @@
 <head>
     <meta charset="UTF-8"/>
     <title>JDoc | Javadoc托管服务</title>
-    <link rel="stylesheet" href="lib/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/bootstrap/docs.min.css">
-    <style>
-        .bs-docs-header h1 {
-            font-size: 50px;
-        }
-
-        .bs-docs-header p {
-            font-size: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/docs.min.css">
+    <link rel="stylesheet" href="${baseUrl}/css/jdoc.css">
 </head>
 
 <body>
@@ -76,20 +68,20 @@
 
     <h3 class="page-header">使用概述</h3>
     <ul>
-        <li>只需要通过 URL 即可访问你需要的 javadoc 资源，如：<code>/docs/{groupId}/{artifactId}/{version}</code></li>
+        <li>只需要通过 URL 即可访问你需要的 javadoc 资源，如：<code>${baseUrl}/docs/{groupId}/{artifactId}/{version}</code></li>
         <li>可以通过徽章服务来引用对应的 javadoc 资源链接，
-            如：<a href=""><img src="https://img.shields.io/badge/zealot-1.3.1-brightgreen.svg"></a></li>
+            如：<a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1"><img src="https://img.shields.io/badge/zealot-1.3.1-brightgreen.svg"></a></li>
     </ul>
 
     <h3 class="page-header">使用示例</h3>
     <ul>
         <li>
-            SpringBoot: <a href="https://img.shields.io/badge/springboot-2.1.5-brightgreen.svg">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/</a>
-            <a href=""><img src="https://img.shields.io/badge/springboot-2.1.5-brightgreen.svg" alt="SpringBoot"></a>
+            SpringBoot: <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/</a>
+            <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1"><img src="https://img.shields.io/badge/springboot-2.1.5-brightgreen.svg" alt="SpringBoot"></a>
         </li>
         <li>
-            Zealot: <a href="https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/</a>
-            <a href=""><img src="https://img.shields.io/badge/zealot-1.3.1-brightgreen.svg"></a>
+            Zealot: <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/</a>
+            <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1"><img src="https://img.shields.io/badge/zealot-1.3.1-brightgreen.svg"></a>
         </li>
     </ul>
 </div>
@@ -98,51 +90,59 @@
     <div class="container">
         <ul class="bs-docs-footer-links">
             <li><a href="https://github.com/blinkfox/javadoc-server">GitHub 源码</a></li>
-            <li><a href="../getting-started/#examples">示例查看</a></li>
-            <li><a href="http://www.youzhan.org">其他项目</a></li>
-            <li><a href="../about/">关于我</a></li>
+            <li><a href="">示例查看</a></li>
+            <li><a href="">其他项目</a></li>
+            <li><a href="">关于我</a></li>
         </ul>
         <p>本项目源码受 <a rel="license" href="https://github.com/blinkfox/javadoc-server/blob/master/LICENSE" target="_blank">Apache License 2.0</a>开源协议保护。</p>
     </div>
 </footer>
 
-<script src="lib/jquery/jquery.min.js"></script>
-<script src="lib/bootstrap/bootstrap.min.js"></script>
+<script src="${baseUrl}/lib/jquery/jquery.min.js"></script>
+<script src="${baseUrl}/lib/bootstrap/bootstrap.min.js"></script>
 <script>
-var isBlank = function (x) {
-    return !x || x === '' || $.trim(x).length === 0;
-};
+    var isBlank = function (x) {
+        return !x || x === '' || $.trim(x).length === 0;
+    };
 
-var seeJavaDoc = function () {
-    // 获取和判断 groupId.
-    var groupId = $('#groupId').val();
-    var $group = $('.group-form-group');
-    if (isBlank(groupId)) {
-        $group.addClass('has-error');
-        return;
-    }
-    $group.removeClass('has-error');
+    var seeJavaDoc = function () {
+        // 获取和判断 groupId.
+        var groupId = $('#groupId').val();
+        var $group = $('.group-form-group');
+        if (isBlank(groupId)) {
+            $group.addClass('has-error');
+            return;
+        }
+        $group.removeClass('has-error');
 
-    // 获取和判断 artifactId.
-    var artifactId = $('#artifactId').val();
-    var $artifact = $('.artifact-form-group');
-    if (isBlank(artifactId)) {
-        $artifact.addClass('has-error');
-        return;
-    }
-    $artifact.removeClass('has-error');
+        // 获取和判断 artifactId.
+        var artifactId = $('#artifactId').val();
+        var $artifact = $('.artifact-form-group');
+        if (isBlank(artifactId)) {
+            $artifact.addClass('has-error');
+            return;
+        }
+        $artifact.removeClass('has-error');
 
-    // 获取和判断 version.
-    var version = $('#version').val();
-    var $version = $('.version-form-group');
-    if (isBlank(version)) {
-        $version.addClass('has-error');
-        return;
-    }
-    $version.removeClass('has-error');
+        // 获取和判断 version.
+        var version = $('#version').val();
+        var $version = $('.version-form-group');
+        if (isBlank(version)) {
+            $version.addClass('has-error');
+            return;
+        }
+        $version.removeClass('has-error');
 
-    window.open('/docs/' + $.trim(groupId) +'/' + $.trim(artifactId) + '/' + $.trim(version), '_blank').location;
-};
+        window.open('${baseUrl}/docs/' + $.trim(groupId) +'/' + $.trim(artifactId) + '/' + $.trim(version), '_blank').location;
+    };
+
+    $(function () {
+        $('.bs-docs-container .form-inline').keyup(function (event) {
+            if (event.keyCode === 13) {
+                seeJavaDoc();
+            }
+        });
+    });
 </script>
 </body>
 </html>

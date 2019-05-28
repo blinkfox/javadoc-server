@@ -41,6 +41,8 @@ logging:
 
 # 本系统服务相关的配置项.
 system:
+  # 本服务基础的 baseUrl 地址
+  baseUrl: http://127.0.0.1:1010
   # MinIO 的别名和用来存 javadoc 的桶.
   minio:
     endpoint: http://127.0.0.1:9000
@@ -48,6 +50,7 @@ system:
     secretKey: 12345678
     alias: javadoc
     bucket: docs
+  # 去下载 javadoc 资源的 maven 仓库地址.
   mvnRepos:
     - https://repo1.maven.org/maven2
     - http://repo.spring.io/libs-milestone

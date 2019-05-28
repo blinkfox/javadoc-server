@@ -1,6 +1,5 @@
 package com.blinkfox.javadoc.controller;
 
-import com.blinkfox.javadoc.exception.RunException;
 import com.blinkfox.javadoc.service.RecordService;
 
 import java.util.List;
@@ -8,7 +7,6 @@ import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +33,9 @@ public class IndexController {
      * @return 字符串
      */
     @GetMapping
-    public String index() {
-        return "index.html";
+    public ModelAndView index(ModelAndView modelView) {
+        modelView.setViewName("index");
+        return modelView;
     }
 
     /**

@@ -3,25 +3,11 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Javadoc 托管服务.</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
-    <style>
-        .breadcrumb {
-            margin-bottom: 0px;
-        }
-
-        .breadcrumb a {
-            color: #4A6782
-        }
-
-        #doc-iframe {
-            width: 100%;
-            height: calc(100vh - 50px);
-        }
-    </style>
+    <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="${baseUrl}/css/jdoc.css">
 </head>
 
 <body>
-
 <div>
     <ol class="breadcrumb">
         <li><a href="/">首页</a></li>
@@ -59,8 +45,8 @@
     </div>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+<script src="${baseUrl}/lib/jquery/jquery.min.js"></script>
+<script src="${baseUrl}/lib/bootstrap/bootstrap.min.js"></script>
 <script>
     var groupId = '${groupId}';
     var artifactId = '${artifactId}';
