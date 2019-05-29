@@ -42,27 +42,28 @@
 
 <div class="container bs-docs-container">
     <h3 id="overview" class="page-header">尝试一下</h3>
-    <p>请在下方的输入框中输入你需要查看的 javadoc.jar 包的 <code>groupId</code>、<code>artifactId</code>、和<code>version</code>，然后"点击查看"即可。</p>
+    <p>请在下方的输入框中修改你需要查看的 javadoc.jar 包的 <code>groupId</code>、<code>artifactId</code>、和<code>version</code>，然后"点击查看"即可。</p>
     <div class="form-inline">
         <div class="form-group group-form-group">
             <div class="input-group">
                 <div class="input-group-addon">groupId</div>
-                <input type="text" class="form-control" id="groupId" placeholder="groupId">
+                <input type="text" class="form-control" id="groupId" value="com.blinkfox" placeholder="groupId">
             </div>
         </div>
         <div class="form-group artifact-form-group">
             <div class="input-group">
                 <div class="input-group-addon">artifactId</div>
-                <input type="text" class="form-control" id="artifactId" placeholder="artifactId">
+                <input type="text" class="form-control" id="artifactId" value="zealot" placeholder="artifactId">
             </div>
         </div>
         <div class="form-group version-form-group">
             <div class="input-group">
                 <div class="input-group-addon">version</div>
-                <input type="text" class="form-control" id="version" placeholder="version">
+                <input type="text" class="form-control" id="version" value="1.3.1" placeholder="version">
             </div>
         </div>
         <button class="btn btn-primary" onclick="seeJavaDoc();">点击查看</button>
+        <button class="btn btn-default" onclick="clean();">清空</button>
         <span id="helpBlock" class="help-block"><b>注意</b>：如果该 javadoc.jar 是第一次被加载访问的话，需要等候一段时间。</span>
     </div>
 
@@ -76,12 +77,12 @@
     <h3 class="page-header">使用示例</h3>
     <ul>
         <li>
-            SpringBoot: <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/</a>
-            <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1"><img src="https://img.shields.io/badge/springboot-2.1.5-brightgreen.svg" alt="SpringBoot"></a>
+            SpringBoot: <a href="${baseUrl}/docs/org.springframework.boot/spring-boot-starter-parent/2.1.5.RELEASE">${baseUrl}/docs/org.springframework.boot/spring-boot-starter-parent/2.1.5.RELEASE</a>
+            <a href="${baseUrl}/docs/org.springframework.boot/spring-boot-starter-parent/2.1.5.RELEASE"><img src="https://img.shields.io/badge/SpringBoot-2.1.5-brightgreen.svg" alt="SpringBoot"></a>
         </li>
         <li>
-            Zealot: <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1">https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/api/</a>
-            <a href="${baseUrl}/docs/com.blinkfox/zealot/1.3.1"><img src="https://img.shields.io/badge/zealot-1.3.1-brightgreen.svg"></a>
+            Zealot: <a href="${baseUrl}/docs/org.apache.commons/commons-lang3/3.9">${baseUrl}/docs/org.apache.commons/commons-lang3/3.9</a>
+            <a href="${baseUrl}/docs/org.apache.commons/commons-lang3/3.9"><img src="https://img.shields.io/badge/commons lang3-3.9-brightgreen.svg"></a>
         </li>
     </ul>
 </div>

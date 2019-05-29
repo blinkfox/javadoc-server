@@ -30,7 +30,9 @@ public class GlobalInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler, ModelAndView modelView) {
-        modelView.addObject("baseUrl", systemConfig.getBaseUrl());
+        if (modelView != null) {
+            modelView.addObject("baseUrl", systemConfig.getBaseUrl());
+        }
     }
 
 }
