@@ -155,7 +155,7 @@ public class JarService {
      */
     private void decompressJar(String destDir, JarInfo jarInfo) {
         try (JarFile jar = new JarFile(jarInfo.getJarFile())) {
-            Enumeration enumEntries = jar.entries();
+            Enumeration<?> enumEntries = jar.entries();
             while (enumEntries.hasMoreElements()) {
                 JarEntry jarEntry = (JarEntry) enumEntries.nextElement();
                 File file = new File(destDir + File.separator + jarEntry.getName());

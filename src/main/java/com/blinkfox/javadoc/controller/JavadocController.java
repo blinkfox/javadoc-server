@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author blinkfox on 2019-05-26.
  */
-@Slf4j
 @RestController
 @RequestMapping("/javadoc")
 @Api(tags = "获取 Javadoc 的接口")

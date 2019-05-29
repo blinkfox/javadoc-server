@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>JDoc | Javadoc托管服务</title>
+    <link rel="Shortcut Icon" href="${baseUrl}/images/favicon.ico">
     <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/docs.min.css">
     <link rel="stylesheet" href="${baseUrl}/css/jdoc.css">
@@ -18,12 +19,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">JDoc</a>
+            <a href="${baseUrl}" class="navbar-brand">JDoc</a>
         </div>
         <nav id="bs-navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li>
-                    <a href="/">首页</a>
+                    <a href="${baseUrl}">首页</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -77,11 +78,11 @@
     <h3 class="page-header">使用示例</h3>
     <ul>
         <li>
-            SpringBoot: <a href="${baseUrl}/docs/org.springframework.boot/spring-boot-starter-parent/2.1.5.RELEASE">${baseUrl}/docs/org.springframework.boot/spring-boot-starter-parent/2.1.5.RELEASE</a>
-            <a href="${baseUrl}/docs/org.springframework.boot/spring-boot-starter-parent/2.1.5.RELEASE"><img src="https://img.shields.io/badge/SpringBoot-2.1.5-brightgreen.svg" alt="SpringBoot"></a>
+            spring-context: <a href="${baseUrl}/docs/org.springframework/spring-context/5.1.7.RELEASE">${baseUrl}/docs/org.springframework/spring-context/5.1.7.RELEASE</a>
+            <a href="${baseUrl}/docs/org.springframework/spring-context/5.1.7.RELEASE"><img src="https://img.shields.io/badge/SpringBoot-2.1.5-brightgreen.svg" alt="SpringBoot"></a>
         </li>
         <li>
-            Zealot: <a href="${baseUrl}/docs/org.apache.commons/commons-lang3/3.9">${baseUrl}/docs/org.apache.commons/commons-lang3/3.9</a>
+            commons-lang3: <a href="${baseUrl}/docs/org.apache.commons/commons-lang3/3.9">${baseUrl}/docs/org.apache.commons/commons-lang3/3.9</a>
             <a href="${baseUrl}/docs/org.apache.commons/commons-lang3/3.9"><img src="https://img.shields.io/badge/commons lang3-3.9-brightgreen.svg"></a>
         </li>
     </ul>
@@ -104,6 +105,12 @@
 <script>
     var isBlank = function (x) {
         return !x || x === '' || $.trim(x).length === 0;
+    };
+
+    var clean = function () {
+        $('#groupId').val('');
+        $('#artifactId').val('');
+        $('#version').val('');
     };
 
     var seeJavaDoc = function () {

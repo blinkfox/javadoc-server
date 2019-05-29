@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Javadoc 托管服务.</title>
+    <link rel="Shortcut Icon" href="${baseUrl}/images/favicon.ico">
     <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="${baseUrl}/css/jdoc.css">
 </head>
@@ -10,7 +11,7 @@
 <body>
 <div>
     <ol class="breadcrumb">
-        <li><a href="/">首页</a></li>
+        <li><a href="${baseUrl}">首页</a></li>
         <li>${groupId}</li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

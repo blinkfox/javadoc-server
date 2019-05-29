@@ -8,6 +8,11 @@ package com.blinkfox.javadoc.exception;
 public class RunException extends RuntimeException {
 
     /**
+	 * uid.
+	 */
+	private static final long serialVersionUID = -3030387677806493215L;
+
+	/**
      * 根据 Message 来构造异常实例.
      *
      * @param message 消息

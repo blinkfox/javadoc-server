@@ -37,6 +37,11 @@ public class MinioClientService {
      */
     private static final String SERVER_DIR = ".javadoc-server";
 
+    /**
+     * 检查版本的 `mc -v` 的常量.
+     */
+    private static final String V = " -v";
+
     @Resource
     private SystemConfig systemConfig;
 
@@ -80,7 +85,7 @@ public class MinioClientService {
     private void setMcEnvPath() throws IOException {
         // 执行 mc -v 查看是否已经安装配置了 mc 的环境变量，如果有就直接返回.
         try {
-            if (StringUtils.isNotBlank(CmdKit.exec(osEnum.getMc() + " -v"))) {
+            if (StringUtils.isNotBlank(CmdKit.exec(osEnum.getMc() + V))) {
                 this.mcPath = osEnum.getMc();
                 log.info("检测到了 mc 环境变量，将跳过安装 MinIO Client.");
                 return;

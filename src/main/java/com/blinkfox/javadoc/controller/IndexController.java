@@ -5,8 +5,6 @@ import com.blinkfox.javadoc.service.RecordService;
 import java.util.List;
 import javax.annotation.Resource;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author blinkfox on 2019-05-22.
  */
-@Slf4j
 @Controller
 @RequestMapping
 public class IndexController {
