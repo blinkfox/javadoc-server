@@ -46,15 +46,13 @@ public class IndexController {
             @PathVariable("artifactId") String artifactId) {
         // 查询出该 groupId 和 artifactId 对应的最近的 20 个 version，如果 version 为空就默认选取一个最近的.
         List<String> versions = recordService.findVersionsByGroupIdAndArtifactId(groupId, artifactId);
-        if (!CollectionUtils.isEmpty(versions)) {
-            modelView.addObject("version", versions.get(0));
-            modelView.addObject("versions", versions);
-        }
-
+        
         // 设置需要返回渲染的数据.
         modelView.addObject("groupId", groupId);
         modelView.addObject("artifactId", artifactId);
+        modelView.addObject("version", CollectionUtils.isEmpty(versions) ? "" : versions.get(0));
         modelView.addObject("artifactIds", recordService.findArtifactIdsByGroupId(groupId));
+        modelView.addObject("versions", versions);
         modelView.setViewName("doc");
         return modelView;
     }

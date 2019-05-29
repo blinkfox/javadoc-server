@@ -154,6 +154,10 @@ public class MinioClientService {
      * @return JSONArray
      */
     private JSONArray handleJsons2JsonArray(String jsons) {
+        if (StringUtils.isBlank(jsons)) {
+            return new JSONArray();
+        }
+
         jsons = jsons.replace("}", "},");
         jsons = "[" + jsons.substring(0, jsons.length() - 1) + "]";
         JSONArray jsonArray = JSON.parseArray(jsons);
