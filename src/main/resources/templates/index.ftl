@@ -6,6 +6,7 @@
     <link rel="Shortcut Icon" href="${baseUrl}/images/favicon.ico">
     <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="${baseUrl}/lib/bootstrap/docs.min.css">
+    <link rel="stylesheet" href="${baseUrl}/lib/prism/prism.css">
     <link rel="stylesheet" href="${baseUrl}/css/jdoc.css">
 </head>
 
@@ -86,6 +87,22 @@
             <a href="${baseUrl}/docs/org.apache.commons/commons-lang3/3.9"><img src="https://img.shields.io/badge/commons lang3-3.9-brightgreen.svg"></a>
         </li>
     </ul>
+
+    <h3 class="page-header">生成 javadoc 的 Maven 插件</h3>
+    <pre class="language-xml"><code class="language-xml">
+&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-javadoc-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.0.1&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;phase&gt;package&lt;/phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;jar&lt;/goal&gt;
+            &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
 </div>
 
 <footer class="bs-docs-footer">
@@ -102,6 +119,7 @@
 
 <script src="${baseUrl}/lib/jquery/jquery.min.js"></script>
 <script src="${baseUrl}/lib/bootstrap/bootstrap.min.js"></script>
+<script src="${baseUrl}/lib/prism/prism.js"></script>
 <script>
     var isBlank = function (x) {
         return !x || x === '' || $.trim(x).length === 0;
